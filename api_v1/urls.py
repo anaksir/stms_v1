@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (ProductViewSet, CategoryView, SupplierView,
-                    SingleCategoryView)
+                    SingleCategoryView, DeliveryViewSet)
 from .yasg import urlpatterns as swagger_urls
 from rest_framework.routers import DefaultRouter
 
@@ -9,6 +9,7 @@ app_name = "api_v1"
 
 router = DefaultRouter()
 router.register('products', ProductViewSet, basename='product')
+router.register('deliveries', DeliveryViewSet, basename='delivery')
 
 urlpatterns = [
     path('categories/', CategoryView.as_view()),

@@ -34,6 +34,14 @@ class OrderAdmin(admin.ModelAdmin):
     pass
 
 
+class DeliveryItemInline(admin.TabularInline):
+    model = DeliveryItem
+
+
 @admin.register(Delivery)
 class DeliveryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'supplier', 'created_at', 'status', 'items_set')
+    inlines = (DeliveryItemInline,)
+
+    def items_set(self, obj):
+        return ', '.join(f'{i.product.name} - {i.quantity}' for i in obj.items.all())

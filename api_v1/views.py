@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import (get_object_or_404, RetrieveUpdateDestroyAPIView,
                                      ListCreateAPIView)
-from .models import Product, Category, Supplier
+from .models import Product, Category, Supplier, Delivery
 from .serializers import (ProductSerializer, CategorySerializer,
-                          SupplierSerializer)
+                          SupplierSerializer, DeliverySerializer)
 
 
 class SupplierView(APIView):
@@ -29,3 +29,9 @@ class CategoryView(ListCreateAPIView):
 class SingleCategoryView(RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class DeliveryViewSet(viewsets.ModelViewSet):
+    """Тестовый ViewSet для отображения поставки"""
+    queryset = Delivery.objects.all()
+    serializer_class = DeliverySerializer
