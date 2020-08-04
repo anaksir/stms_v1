@@ -113,6 +113,7 @@ class Delivery(models.Model):
         default='active',
         verbose_name='Статус'
     )
+    items = models.ManyToManyField(Product, through='DeliveryItem')
 
 
 class DeliveryItem(models.Model):
@@ -120,7 +121,6 @@ class DeliveryItem(models.Model):
     delivery = models.ForeignKey(
         Delivery,
         on_delete=models.CASCADE,
-        related_name='items',
         verbose_name='Поставка'
     )
     product = models.ForeignKey(
