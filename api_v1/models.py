@@ -115,6 +115,10 @@ class Delivery(models.Model):
     )
     items = models.ManyToManyField(Product, through='DeliveryItem')
 
+    @property
+    def get_delivery_total(self):
+        for item in self
+
 
 class DeliveryItem(models.Model):
     """Модель товаров в поставке"""
@@ -132,6 +136,9 @@ class DeliveryItem(models.Model):
         verbose_name='Количество'
     )
 
+    @property
+    def get_item_price(self):
+        return self.product.price * self.quantity
 
 class Buyer(models.Model):
     """Модель покупателя"""
