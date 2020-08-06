@@ -1,5 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.db.models import F, Sum
 
 
 class Category(models.Model):
@@ -113,6 +114,11 @@ class Delivery(models.Model):
         default='active',
         verbose_name='Статус'
     )
+
+    @property
+    def total_values(self):
+        values = self.items.annotate(item_value=F('quantity') * F('product__price')).aggregate(total=Sum('item_value'))
+        return values['total']
 
 
 class DeliveryItem(models.Model):

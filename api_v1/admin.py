@@ -40,7 +40,7 @@ class DeliveryItemInline(admin.TabularInline):
 
 @admin.register(Delivery)
 class DeliveryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'supplier', 'created_at', 'status', 'items_set')
+    list_display = ('id', 'supplier', 'created_at', 'status', 'items_set', 'total_values')
     inlines = (DeliveryItemInline,)
 
     def items_set(self, obj):
