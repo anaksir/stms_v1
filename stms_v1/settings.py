@@ -25,7 +25,7 @@ SECRET_KEY = 'r79xk9%6lzp1((lw^elp=^9%-zi&=)c9d-3!d#!#p^+w#yd)r&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.44.254', '127.0.0.1']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'phonenumber_field',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
