@@ -42,3 +42,16 @@ class DeliverySerializer(serializers.ModelSerializer):
     class Meta:
         model = Delivery
         fields = ('supplier', 'items')
+
+    def create(self, validated_data):
+        print('-' * 80)
+        print(validated_data)
+        print('-' * 80)
+        items_data = validated_data.pop('items')
+        delivery = Delivery.objects.create(**validated_data)
+        for item_data in items_data:
+            DeliveryItem.objects.create(delivery=delivery, **item_data)
+            product = item_data['product']
+            product.quantity += item_data['quantity']
+            product.save()
+        return delivery

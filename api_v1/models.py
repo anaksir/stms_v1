@@ -7,7 +7,8 @@ class Category(models.Model):
     """Модель категории товаров"""
     name = models.CharField(
         max_length=128,
-        verbose_name='Имя категории'
+        verbose_name='Имя категории',
+        unique=True
     )
 
     def __str__(self):
@@ -18,7 +19,8 @@ class Product(models.Model):
     """Модель товаров"""
     name = models.CharField(
         max_length=128,
-        verbose_name='Наименование товара'
+        verbose_name='Наименование товара',
+        unique=True
     )
     category = models.ForeignKey(
         Category,
@@ -28,7 +30,8 @@ class Product(models.Model):
     )
     sku = models.CharField(
         max_length=64,
-        verbose_name='Артикул'
+        verbose_name='Артикул',
+        unique=True
     )
     quantity = models.PositiveIntegerField(
         verbose_name='Количество',
@@ -45,24 +48,13 @@ class Product(models.Model):
     def get_total_price(self):
         return self.price * self.quantity
 
-# class Warehouse(models.Model):
-#     """Модель остатков товаров на складе"""
-#     product = models.OneToOneField(
-#         Product,
-#         verbose_name='Товар',
-#         on_delete=models.CASCADE,
-#         primary_key=True
-#     )
-#     quantity = models.PositiveIntegerField(
-#         verbose_name='Количество'
-#     )
-
 
 class Supplier(models.Model):
     """Модель поставщиков"""
     name = models.CharField(
         max_length=128,
-        verbose_name='Наименование поставшика'
+        verbose_name='Наименование поставшика',
+        unique=True
     )
     address = models.CharField(
         max_length=128,
@@ -115,6 +107,9 @@ class Delivery(models.Model):
         verbose_name='Статус'
     )
 
+    def __str__(self):
+        return f'{self.created_at.date()} by {self.supplier}'
+
     @property
     def total_values(self):
         values = self.items.annotate(item_value=F('quantity') * F('product__price')).aggregate(total=Sum('item_value'))
@@ -132,7 +127,7 @@ class DeliveryItem(models.Model):
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        verbose_name='Товар'
+        verbose_name='Товар',
     )
     quantity = models.PositiveIntegerField(
         verbose_name='Количество'
@@ -201,7 +196,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        verbose_name='Товар'
+        verbose_name='Товар',
     )
     quantity = models.PositiveIntegerField(
         verbose_name='Количество'

@@ -4,7 +4,12 @@ from .models import (Product, Category, Supplier, Buyer, Order,
 
 
 admin.site.register(OrderItem)
-admin.site.register(DeliveryItem)
+
+
+@admin.register(DeliveryItem)
+class DeliveryItemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'delivery', 'product', 'quantity')
+    pass
 
 
 @admin.register(Category)
@@ -15,7 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'quantity', 'price', 'get_total_price')
+    list_display = ('id', 'name', 'category', 'quantity', 'price', 'get_total_price')
     list_filter = ('category__name',)
 
 
