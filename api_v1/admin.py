@@ -1,10 +1,16 @@
 from django.contrib import admin
-from .models import (Product, Category, Supplier, Buyer, Order,
+from .models import (User, Product, Category, Supplier, Buyer, Order,
                      Delivery, OrderItem, DeliveryItem)
 
 
 admin.site.register(OrderItem)
-admin.site.register(DeliveryItem)
+admin.site.register(User)
+
+
+@admin.register(DeliveryItem)
+class DeliveryItemAdmin(admin.ModelAdmin):
+    list_display = ('id', 'delivery', 'product', 'quantity')
+    pass
 
 
 @admin.register(Category)
@@ -15,7 +21,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'quantity', 'price', 'get_total_price')
+    list_display = ('id', 'name', 'category', 'quantity', 'price', 'get_total_price')
     list_filter = ('category__name',)
 
 
@@ -29,9 +35,14 @@ class BuyerAdmin(admin.ModelAdmin):
     pass
 
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'buyer', 'created_at', 'status',)
+    inlines = (OrderItemInline,)
 
 
 class DeliveryItemInline(admin.TabularInline):
@@ -40,7 +51,7 @@ class DeliveryItemInline(admin.TabularInline):
 
 @admin.register(Delivery)
 class DeliveryAdmin(admin.ModelAdmin):
-    list_display = ('id', 'supplier', 'created_at', 'status', 'items_set')
+    list_display = ('id', 'supplier', 'created_at', 'status', 'items_set', 'total_values')
     inlines = (DeliveryItemInline,)
 
     def items_set(self, obj):
