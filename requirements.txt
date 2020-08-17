@@ -8,6 +8,7 @@ Django==3.0.9
 django-extensions==3.0.4
 django-phonenumber-field==4.0.0
 djangorestframework==3.11.0
+djangorestframework-simplejwt==4.4.0
 drf-yasg==1.17.1
 idna==2.10
 inflection==0.5.0
@@ -16,6 +17,7 @@ Jinja2==2.11.2
 MarkupSafe==1.1.1
 packaging==20.4
 phonenumbers==8.12.7
+PyJWT==1.7.1
 pyparsing==2.4.7
 pytz==2020.1
 requests==2.24.0

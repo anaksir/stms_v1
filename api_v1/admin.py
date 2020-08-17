@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import (Product, Category, Supplier, Buyer, Order,
+from .models import (User, Product, Category, Supplier, Buyer, Order,
                      Delivery, OrderItem, DeliveryItem)
 
 
 admin.site.register(OrderItem)
+admin.site.register(User)
 
 
 @admin.register(DeliveryItem)
@@ -34,9 +35,14 @@ class BuyerAdmin(admin.ModelAdmin):
     pass
 
 
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'buyer', 'created_at', 'status',)
+    inlines = (OrderItemInline,)
 
 
 class DeliveryItemInline(admin.TabularInline):
