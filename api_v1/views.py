@@ -10,6 +10,7 @@ from .serializers import (ProductSerializer, CategorySerializer,
                           SupplierSerializer, DeliverySerializer,
                           UserSerializer, OrderSerializer, BuyerSerializer,
                           BuyerDetailSerializer)
+from django.db.models import Count, Sum
 
 
 class SupplierView(APIView):
@@ -38,9 +39,20 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
 
-class CategoryView(ListCreateAPIView):
-    queryset = Category.objects.all()
+class CategoryViewSet(viewsets.ModelViewSet):
+    """ViewSet для отображения категорий"""
+    # queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        """
+        Возвращает queryset с аннотацией количеством товаров категории и
+        суммой стоимости товаров в категории
+        """
+        return Category.objects.annotate(
+            number_of_products=Count('products'),
+            total_value=Sum('products__quantity')
+        )
 
 
 class SingleCategoryView(RetrieveUpdateDestroyAPIView):
