@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.generics import (get_object_or_404, RetrieveUpdateDestroyAPIView,
                                      ListCreateAPIView)
@@ -10,7 +11,7 @@ from .serializers import (ProductSerializer, CategorySerializer,
                           SupplierSerializer, DeliverySerializer,
                           UserSerializer, OrderSerializer, BuyerSerializer,
                           BuyerDetailSerializer)
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 
 
 class SupplierView(APIView):
@@ -51,7 +52,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
         """
         return Category.objects.annotate(
             number_of_products=Count('products'),
-            total_value=Sum('products__quantity')
+            total_items=Sum('products__quantity'),
+            total_value=Sum(F('products__quantity') * F('products__price'))
         )
 
 
@@ -70,6 +72,23 @@ class OrderViewSet(viewsets.ModelViewSet):
     """ViewSet для отображения заказа"""
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    @action(detail=False)
+    def recent_orders(self, request):
+        """
+        Показывает по умолчанию последние 10 заказов,
+        или показывает число, указнное в GET-параметре limit.
+        """
+        orders_limit = self.request.query_params.get('limit', '10')
+        try:
+            orders_limit = int(orders_limit)
+        except ValueError:
+            orders_limit = 10
+        recent_orders = (
+            Order.objects.all().order_by('-created_at')[:orders_limit]
+        )
+        serializer = self.get_serializer(recent_orders, many=True)
+        return Response(serializer.data)
 
 
 class HelloView(APIView):

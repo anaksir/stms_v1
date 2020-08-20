@@ -33,14 +33,23 @@ class UserSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор для категорий"""
     number_of_products = serializers.SerializerMethodField()
+    total_items = serializers.SerializerMethodField()
     total_value = serializers.SerializerMethodField()
 
     class Meta:
         model = Category
-        fields = ('name', 'number_of_products', 'total_value')
+        fields = (
+            'name',
+            'number_of_products',
+            'total_items',
+            'total_value'
+        )
 
     def get_number_of_products(self, obj):
         return obj.number_of_products
+
+    def get_total_items(self, obj):
+        return obj.total_items or 0
 
     def get_total_value(self, obj):
         return obj.total_value or 0
