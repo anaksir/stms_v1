@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import (ProductViewSet, CategoryView, SupplierView,
+from .views import (ProductViewSet, CategoryViewSet, SupplierView,
                     SingleCategoryView, DeliveryViewSet, HelloView,
                     UserListView, OrderViewSet, BuyerViewSet)
 from .yasg import urlpatterns as swagger_urls
@@ -14,6 +14,7 @@ router.register('products', ProductViewSet, basename='product')
 router.register('deliveries', DeliveryViewSet, basename='delivery')
 router.register('orders', OrderViewSet, basename='order')
 router.register('buyers', BuyerViewSet, basename='buyer')
+router.register('categories', CategoryViewSet, basename='category')
 
 urlpatterns = [
     path('token/',
@@ -22,8 +23,6 @@ urlpatterns = [
     path('token/refresh/',
          jwt_views.TokenRefreshView.as_view(),
          name='token_refresh'),
-    path('categories/', CategoryView.as_view()),
-    path('categories/<int:pk>', SingleCategoryView.as_view()),
     path('suppliers/', SupplierView.as_view()),
     path('hello/', HelloView.as_view(), name='hello'),
     path('users/', UserListView.as_view(), name='users'),
