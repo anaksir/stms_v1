@@ -157,10 +157,6 @@ class Delivery(models.Model):
     )
     items = models.ManyToManyField(Product, through='DeliveryItem')
 
-    @property
-    def get_delivery_total(self):
-        for item in self
-
     def __str__(self):
         return f'{self.created_at.date()} by {self.supplier}'
 

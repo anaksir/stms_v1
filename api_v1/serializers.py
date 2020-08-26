@@ -30,6 +30,14 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email', 'password')
 
 
+class CategoryCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания категории"""
+
+    class Meta:
+        model = Category
+        fields = ('name',)
+
+
 class CategorySerializer(serializers.ModelSerializer):
     """Сериализатор для категорий"""
     number_of_products = serializers.SerializerMethodField()
@@ -44,6 +52,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'total_items',
             'total_value'
         )
+
 
     def get_number_of_products(self, obj):
         return obj.number_of_products

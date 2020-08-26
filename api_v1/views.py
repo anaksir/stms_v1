@@ -8,10 +8,18 @@ from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from .models import Product, Category, Supplier, Delivery, User, Order, Buyer
 from .serializers import (ProductSerializer, CategorySerializer,
+                          CategoryCreateSerializer,
                           SupplierSerializer, DeliverySerializer,
                           UserSerializer, OrderSerializer, BuyerSerializer,
                           BuyerDetailSerializer)
 from django.db.models import Count, Sum, F
+
+
+class MultipeSerializersViewSetMixin:
+    action_serializers = None
+
+    def get_serializer_class(self):
+        return self.action_serializers.get(self.action, self.serializer_class)
 
 
 class SupplierView(APIView):
@@ -40,10 +48,13 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(MultipeSerializersViewSetMixin, viewsets.ModelViewSet):
     """ViewSet для отображения категорий"""
     # queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    action_serializers = {
+        'create': CategoryCreateSerializer,
+    }
 
     def get_queryset(self):
         """
