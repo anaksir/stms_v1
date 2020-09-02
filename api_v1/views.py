@@ -11,22 +11,28 @@ from .serializers import (ProductSerializer, CategorySerializer,
                           CategoryCreateSerializer,
                           SupplierSerializer, DeliverySerializer,
                           UserSerializer, OrderSerializer, BuyerSerializer,
-                          BuyerDetailSerializer)
+                          BuyerDetailSerializer, SupplierDetailSerializer)
 from django.db.models import Count, Sum, F
 
 
 class MultipeSerializersViewSetMixin:
+    """
+    Mixin для ViewSet, для выбора отдельных Serializer'ов для разных действий
+    """
     action_serializers = None
 
     def get_serializer_class(self):
         return self.action_serializers.get(self.action, self.serializer_class)
 
 
-class SupplierView(APIView):
-    def get(self, request):
-        products = Supplier.objects.all()
-        serializer = SupplierSerializer(products, many=True)
-        return Response({'suppliers': serializer.data})
+class SupplierViewSet(MultipeSerializersViewSetMixin, viewsets.ModelViewSet):
+    """ViewSet для отображения поставщиков"""
+    queryset = Supplier.objects.all()
+    serializer_class = SupplierSerializer
+
+    action_serializers = {
+        'retrieve': SupplierDetailSerializer,
+    }
 
 
 class BuyerViewSet(viewsets.ModelViewSet):
@@ -43,7 +49,7 @@ class BuyerViewSet(viewsets.ModelViewSet):
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    """Тестовый ViewSet для отображения товаров"""
+    """ ViewSet для отображения товаров"""
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 

@@ -73,7 +73,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class SupplierSerializer(serializers.ModelSerializer):
-    """Сериализатор для поставщиков"""
+    """Сериализатор для списка поставщиков"""
 
     class Meta:
         model = Supplier
@@ -111,6 +111,26 @@ class DeliverySerializer(serializers.ModelSerializer):
             product.quantity += item_data['quantity']
             product.save()
         return delivery
+
+
+class DeliveryListSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор списка поставок товаров, используется для показа последних
+    поставок у конкретного поставщика в SupplierDetailSerializer
+    """
+    class Meta:
+        model = Delivery
+        fields = ('id', 'created_at')
+
+
+class SupplierDetailSerializer(serializers.ModelSerializer):
+    """Сериализатор для отдельного поставщика"""
+
+    deliveries = DeliveryListSerializer(many=True)
+
+    class Meta:
+        model = Supplier
+        fields = ('__all__')
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
