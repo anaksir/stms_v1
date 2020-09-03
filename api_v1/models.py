@@ -155,7 +155,7 @@ class Delivery(models.Model):
         default='active',
         verbose_name='Статус'
     )
-    items = models.ManyToManyField(Product, through='DeliveryItem')
+    # items = models.ManyToManyField(Product, through='DeliveryItem')
 
     def __str__(self):
         return f'{self.created_at.date()} by {self.supplier}'
@@ -171,6 +171,7 @@ class DeliveryItem(models.Model):
     delivery = models.ForeignKey(
         Delivery,
         on_delete=models.CASCADE,
+        related_name='items',
         verbose_name='Поставка'
     )
     product = models.ForeignKey(
@@ -185,6 +186,7 @@ class DeliveryItem(models.Model):
     @property
     def get_item_price(self):
         return self.product.price * self.quantity
+
 
 class Buyer(models.Model):
     """Модель покупателя"""
