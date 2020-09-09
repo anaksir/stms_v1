@@ -63,12 +63,23 @@ class CategorySerializer(serializers.ModelSerializer):
         return obj.total_value or 0
 
 
+class ProductCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор для товаров"""
+
+    class Meta:
+        model = Product
+        fields = ('name', 'sku', 'price', 'category')
+
+
 class ProductSerializer(serializers.ModelSerializer):
     """Сериализатор для товаров"""
 
     class Meta:
         model = Product
-        fields = ('__all__')
+        fields = (
+            'id', 'name', 'sku', 'price', 'category', 'quantity',
+            'total_price',
+        )
 
 
 class SupplierSerializer(serializers.ModelSerializer):

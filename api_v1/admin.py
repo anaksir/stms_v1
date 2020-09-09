@@ -1,10 +1,16 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import (User, Product, Category, Supplier, Buyer, Order,
                      Delivery, OrderItem, DeliveryItem)
 
 
 admin.site.register(OrderItem)
-admin.site.register(User)
+
+
+@admin.register(User)
+class CustomUserAdmin(admin.ModelAdmin):
+    UserAdmin
+    pass
 
 
 @admin.register(DeliveryItem)
@@ -21,7 +27,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'category', 'quantity', 'price', 'get_total_price')
+    list_display = ('id', 'name', 'category', 'quantity', 'price', 'total_price')
     list_filter = ('category__name',)
 
 

@@ -65,6 +65,67 @@ class Category(models.Model):
         return self.name
 
 
+class Supplier(models.Model):
+    """Модель поставщиков"""
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='supplier_profile'
+    )
+    name = models.CharField(
+        max_length=128,
+        verbose_name='Наименование поставшика',
+        unique=True
+    )
+    address = models.CharField(
+        max_length=128,
+        verbose_name='Адрес'
+    )
+    bank_details = models.CharField(
+        max_length=128,
+        verbose_name='Реквизиты'
+    )
+    contact_person = models.CharField(
+        max_length=128,
+        verbose_name='Контактное лицо'
+    )
+    phone_number = PhoneNumberField(
+        verbose_name='Телефон'
+    )
+
+    product_category = models.ManyToManyField(
+        Category,
+        verbose_name='Категории поставляемых товаров',
+        blank=True
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Buyer(models.Model):
+    """Модель покупателя"""
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='buyer_profile'
+    )
+    full_name = models.CharField(
+        max_length=128,
+        verbose_name='ФИО'
+    )
+    contact_person = models.CharField(
+        max_length=128,
+        verbose_name='Контактное лицо'
+    )
+    phone_number = PhoneNumberField(
+        verbose_name='Телефон'
+    )
+
+    def __str__(self):
+        return self.full_name
+
+
 class Product(models.Model):
     """Модель товаров"""
     name = models.CharField(
@@ -95,42 +156,12 @@ class Product(models.Model):
         return self.name
 
     @property
-    def get_total_price(self):
+    def total_price(self):
+        """
+        Считает полную стоимость товаров одного вида на складе
+        для отображения в админке
+        """
         return self.price * self.quantity
-
-
-class Supplier(models.Model):
-    """Модель поставщиков"""
-    name = models.CharField(
-        max_length=128,
-        verbose_name='Наименование поставшика',
-        unique=True
-    )
-    address = models.CharField(
-        max_length=128,
-        verbose_name='Адрес'
-    )
-    bank_details = models.CharField(
-        max_length=128,
-        verbose_name='Реквизиты'
-    )
-    contact_person = models.CharField(
-        max_length=128,
-        verbose_name='Контактное лицо'
-    )
-    phone_number = PhoneNumberField(
-        verbose_name='Телефон'
-    )
-    email = models.EmailField(
-        verbose_name='Адрес электронной почты'
-    )
-    product_category = models.ManyToManyField(
-        Category,
-        verbose_name='Категории поставляемых товаров'
-    )
-
-    def __str__(self):
-        return self.name
 
 
 class Delivery(models.Model):
@@ -187,27 +218,6 @@ class DeliveryItem(models.Model):
     @property
     def get_item_price(self):
         return self.product.price * self.quantity
-
-
-class Buyer(models.Model):
-    """Модель покупателя"""
-    full_name = models.CharField(
-        max_length=128,
-        verbose_name='ФИО'
-    )
-    contact_person = models.CharField(
-        max_length=128,
-        verbose_name='Контактное лицо'
-    )
-    phone_number = PhoneNumberField(
-        verbose_name='Телефон'
-    )
-    email = models.EmailField(
-        verbose_name='Адрес электронной почты'
-    )
-
-    def __str__(self):
-        return self.full_name
 
 
 class Order(models.Model):

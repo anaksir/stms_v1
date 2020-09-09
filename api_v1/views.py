@@ -11,7 +11,8 @@ from .serializers import (ProductSerializer, CategorySerializer,
                           CategoryCreateSerializer,
                           SupplierSerializer, DeliverySerializer,
                           UserSerializer, OrderSerializer, BuyerSerializer,
-                          BuyerDetailSerializer, SupplierDetailSerializer)
+                          BuyerDetailSerializer, SupplierDetailSerializer,
+                          ProductCreateSerializer)
 from django.db.models import Count, Sum, F
 
 
@@ -48,10 +49,14 @@ class BuyerViewSet(viewsets.ModelViewSet):
         return self.action_serializers.get(self.action, self.serializer_class)
 
 
-class ProductViewSet(viewsets.ModelViewSet):
+class ProductViewSet(MultipeSerializersViewSetMixin, viewsets.ModelViewSet):
     """ ViewSet для отображения товаров"""
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    action_serializers = {
+        'create': ProductCreateSerializer,
+    }
 
 
 class CategoryViewSet(MultipeSerializersViewSetMixin, viewsets.ModelViewSet):
@@ -72,11 +77,6 @@ class CategoryViewSet(MultipeSerializersViewSetMixin, viewsets.ModelViewSet):
             total_items=Sum('products__quantity'),
             total_value=Sum(F('products__quantity') * F('products__price'))
         )
-
-
-class SingleCategoryView(RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
 
 
 class DeliveryViewSet(viewsets.ModelViewSet):

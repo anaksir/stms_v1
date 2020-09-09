@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import (ProductViewSet, CategoryViewSet, SupplierViewSet,
-                    SingleCategoryView, DeliveryViewSet, HelloView,
+                    DeliveryViewSet, HelloView,
                     UserListView, OrderViewSet, BuyerViewSet)
 from .yasg import urlpatterns as swagger_urls
 from rest_framework.routers import DefaultRouter
