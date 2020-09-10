@@ -39,6 +39,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
+    created = models.DateTimeField('created', auto_now_add=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_buyer = models.BooleanField('buyer status', default=False)
