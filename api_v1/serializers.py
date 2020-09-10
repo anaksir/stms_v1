@@ -103,6 +103,13 @@ class DeliveryItemSerializer(serializers.ModelSerializer):
         model = DeliveryItem
         fields = ('product', 'quantity')
 
+    def validate_quantity(self, value):
+        if value <= 0:
+            raise serializers.ValidationError(
+                f'Quantity of items must be must be greater than zero'
+            )
+        return value
+
 
 class DeliverySerializer(serializers.ModelSerializer):
     """Сериализатор поставки товаров"""
@@ -115,11 +122,15 @@ class DeliverySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         items_data = validated_data.pop('items')
         delivery = Delivery.objects.create(**validated_data)
+        supplier = delivery.supplier
         for item_data in items_data:
             DeliveryItem.objects.create(delivery=delivery, **item_data)
             product = item_data['product']
             product.quantity += item_data['quantity']
             product.save()
+            # Добавляем категории товаров к поставщику динамически,
+            # при создании поставки
+            supplier.product_category.add(product.category)
         return delivery
 
 

@@ -83,6 +83,19 @@ class DeliveryViewSet(viewsets.ModelViewSet):
     """Тестовый ViewSet для отображения поставки"""
     queryset = Delivery.objects.all()
     serializer_class = DeliverySerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        """
+        Выбираем поставки, относящиеся к окнкретному пользователю,
+        или, если пользователь относится к персооналу, показать все
+        """
+        user = self.request.user
+        if user.is_staff:
+            queryset = Delivery.objects.all()
+        else:
+            queryset = Delivery.objects.filter(supplier=user.supplier_profile)
+        return queryset
 
 
 class OrderViewSet(viewsets.ModelViewSet):
