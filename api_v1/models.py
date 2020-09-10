@@ -70,7 +70,8 @@ class Supplier(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='supplier_profile'
+        related_name='supplier_profile',
+        primary_key=True
     )
     name = models.CharField(
         max_length=128,
@@ -108,7 +109,8 @@ class Buyer(models.Model):
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
-        related_name='buyer_profile'
+        related_name='buyer_profile',
+        primary_key=True
     )
     full_name = models.CharField(
         max_length=128,
