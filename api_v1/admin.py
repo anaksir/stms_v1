@@ -9,8 +9,8 @@ admin.site.register(OrderItem)
 
 @admin.register(User)
 class CustomUserAdmin(admin.ModelAdmin):
-    UserAdmin
-    pass
+    list_display = ('email',)
+    list_filter = ('is_supplier', 'is_buyer', 'is_staff')
 
 
 @admin.register(DeliveryItem)

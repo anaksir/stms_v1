@@ -7,48 +7,41 @@ from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
 
 class UserManager(BaseUserManager):
 
-    use_in_migrations = True
-
-    def _create_user(self, email, password, **extra_fields):
-        # if not username:
-        #     raise ValueError('The given username must be set')
+    def create_user(self, email, password=None):
         if not email:
-            raise ValueError('The given email must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+            raise ValueError('User must have an email address')
+
+        user = self.model(
+            email=self.normalize_email(email),
+        )
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
 
-    def create_user(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
-
-    def create_superuser(self, email, password, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self._create_user(email, password, **extra_fields)
+    def create_superuser(self, email, password):
+        user = self.create_user(email, password=password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        return user
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+
+    ROLE_S
     email = models.EmailField(unique=True)
-    created = models.DateTimeField('created', auto_now_add=True)
-    is_staff = models.BooleanField(default=False)
+    created = models.DateTimeField('Created date', auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    is_buyer = models.BooleanField('buyer status', default=False)
-    is_supplier = models.BooleanField('supplier status', default=False)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_buyer = models.BooleanField(default=False)
+    is_supplier = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+    ordering = ('created',)
 
     def __str__(self):
         return self.email
