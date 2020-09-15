@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views import (ProductViewSet, CategoryViewSet, SupplierViewSet,
                     DeliveryViewSet, HelloView,
-                    UserListView, OrderViewSet, BuyerViewSet)
+                    UserListView, OrderViewSet, BuyerViewSet, UserViewSet)
 from .yasg import urlpatterns as swagger_urls
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt import views as jwt_views
@@ -16,6 +16,7 @@ router.register('orders', OrderViewSet, basename='order')
 router.register('buyers', BuyerViewSet, basename='buyer')
 router.register('categories', CategoryViewSet, basename='category')
 router.register('suppliers', SupplierViewSet, basename='supplier')
+router.register('users', UserViewSet, basename='user')
 
 urlpatterns = [
     path('token/',
@@ -25,7 +26,7 @@ urlpatterns = [
          jwt_views.TokenRefreshView.as_view(),
          name='token_refresh'),
     path('hello/', HelloView.as_view(), name='hello'),
-    path('users/', UserListView.as_view(), name='users'),
+    # path('users/', UserListView.as_view(), name='users'),
 ]
 
 urlpatterns += swagger_urls

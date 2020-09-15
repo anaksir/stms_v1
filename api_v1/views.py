@@ -6,6 +6,7 @@ from rest_framework.generics import (get_object_or_404, RetrieveUpdateDestroyAPI
                                      ListCreateAPIView)
 from rest_framework.permissions import (IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
+from .permissions import UserPermission
 from .models import Product, Category, Supplier, Delivery, User, Order, Buyer
 from .serializers import (ProductSerializer, CategorySerializer,
                           CategoryCreateSerializer,
@@ -132,3 +133,19 @@ class HelloView(APIView):
 class UserListView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """ViewSet для пользователей"""
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+    permission_classes = (UserPermission,)
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     if user.is_authenticated and user.role == 'a':
+    #         queryset = User.objects.all()
+    #     else:
+    #         queryset = user
+    #     return queryset
+

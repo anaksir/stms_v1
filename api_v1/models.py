@@ -28,9 +28,19 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
 
-    ROLE_S
+    ROLE_CHOICES = (
+        ('a', 'Admin'),
+        ('s', 'Supplier'),
+        ('b', 'Buyer'),
+        ('n', 'None')
+    )
     email = models.EmailField(unique=True)
     created = models.DateTimeField('Created date', auto_now_add=True)
+    role = models.CharField(
+        choices=ROLE_CHOICES,
+        default='n',
+        max_length=1
+    )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
