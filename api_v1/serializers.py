@@ -27,8 +27,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('email', 'password')
+        fields = ('email', 'password', 'role')
 
+
+class NotAdminUserSerializer(UserSerializer):
+    """
+    Для отдельной валидации поля role, чтобы обычные пользователи не
+    могли согдавать админов
+    """
+    def validate_role(self, value):
+        if value == 'a':
+            raise serializers.ValidationError(
+                'User role can not be Admin'
+            )
 
 class CategoryCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания категории"""
