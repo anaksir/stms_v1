@@ -20,7 +20,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password):
         user = self.create_user(email, password=password)
-        user.is_staff = True
+        user.role = 'a'
         user.is_superuser = True
         user.save()
         return user
@@ -34,7 +34,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ('b', 'Buyer'),
         ('n', 'None')
     )
-    email = models.EmailField(unique=True)
+    email = models.EmailField('email address', unique=True)
     created = models.DateTimeField('Created date', auto_now_add=True)
     role = models.CharField(
         choices=ROLE_CHOICES,
@@ -42,7 +42,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=1
     )
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_buyer = models.BooleanField(default=False)
     is_supplier = models.BooleanField(default=False)
@@ -55,6 +54,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    @property
+    def is_staff(self):
+        return self.role == 'a'
 
 
 class Category(models.Model):

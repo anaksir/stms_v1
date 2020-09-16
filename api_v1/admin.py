@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import (User, Product, Category, Supplier, Buyer, Order,
                      Delivery, OrderItem, DeliveryItem)
 
@@ -8,9 +9,25 @@ admin.site.register(OrderItem)
 
 
 @admin.register(User)
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('email',)
-    list_filter = ('is_supplier', 'is_buyer', 'is_staff')
+class CustomUserAdmin(UserAdmin):
+    add_form = CustomUserCreationForm
+    form = CustomUserChangeForm
+    model = User
+    list_display = ('id', 'email', 'role')
+    list_filter = ('role',)
+
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Permissions', {'fields': ('role', 'is_active')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2', 'role', 'is_active')
+        }),
+    )
+    search_fields = ('email',)
+    ordering = ('email',)
 
 
 @admin.register(DeliveryItem)
