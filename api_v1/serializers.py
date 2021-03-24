@@ -93,6 +93,13 @@ class DeliveryItemSerializer(serializers.ModelSerializer):
         model = DeliveryItem
         fields = ('product', 'quantity')
 
+    def validate_quantity(self, value):
+        if value <= 0:
+            raise serializers.ValidationError(
+                f'Quantity of items must be must be greater than zero'
+            )
+        return value
+
 
 class DeliverySerializer(serializers.ModelSerializer):
     """Сериализатор поставки товаров"""

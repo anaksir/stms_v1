@@ -125,7 +125,8 @@ class Supplier(models.Model):
     )
     product_category = models.ManyToManyField(
         Category,
-        verbose_name='Категории поставляемых товаров'
+        verbose_name='Категории поставляемых товаров',
+        blank=True,
     )
 
     def __str__(self):
